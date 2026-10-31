@@ -158,7 +158,7 @@ setTimeout(endSp,4300);sp.onclick=endSp;
 
 // state
 const G=[];let cur=null,S={},img=null,rcr=null,iv=null,ss=null,cst=null,face=MOB?"environment":"user",busy=0;
-function add(b,type,dur){const it={b,type,dur:dur||0,url:URL.createObjectURL(b)};G.unshift(it);draw();return it}
+function add(b,type,dur){const it={id:Date.now()+"-"+Math.random().toString(36).slice(2,6),b,type,dur:dur||0,url:URL.createObjectURL(b)};G.unshift(it);draw();persist(it);return it}
 function draw(){
  gr.innerHTML="";ge.style.display=G.length?"none":"";
  if(cur&&!G.includes(cur)){cur=null;$("#v-ed").classList.add("no")}
@@ -167,8 +167,8 @@ function draw(){
   const m=document.createElement(it.type=="v"?"video":"img");m.src=it.url;if(it.type=="v"){m.muted=true;m.preload="metadata"}
   d.append(m);d.onclick=()=>edit(it);
   const a=document.createElement("div");a.className="ac";
-  const dl=document.createElement("a");dl.href=it.url;dl.textContent="⬇";dl.download="screencam-"+(G.length-n)+"."+(it.type=="i"?"png":it.b.type.includes("mp4")?"mp4":"webm");dl.onclick=e=>e.stopPropagation();
-  const x=document.createElement("button");x.textContent="✕";x.title=T(11);x.onclick=e=>{e.stopPropagation();G.splice(G.indexOf(it),1);draw()};
+  const dl=document.createElement("a");dl.href=it.url;dl.textContent="⬇";dl.download="screencam-"+(G.length-n)+"."+(it.type=="i"?"jpg":it.b.type.includes("mp4")?"mp4":"webm");dl.onclick=e=>e.stopPropagation();
+  const x=document.createElement("button");x.textContent="✕";x.title=T(11);x.onclick=e=>{e.stopPropagation();G.splice(G.indexOf(it),1);forget(it);draw()};
   a.append(dl,x);d.append(a);gr.append(d)});
 }
 function $(s){return document.querySelector(s)}
@@ -186,7 +186,7 @@ function tog(st,btn,tm){
  iv=setInterval(()=>tm.textContent=fmt((Date.now()-t0)/1e3),250);
  btn.classList.add("on");if(btn.dataset.t){btn.dataset.t=6;tr()}
  rcr=mk(st,(b,d)=>{add(b,"v",d);clearInterval(iv);tm.style.display="none";btn.classList.remove("on");if(btn.dataset.t){btn.dataset.t=8;tr()}rcr=null;toast("✓ "+T(2))})}
-function snap(v){if(!v.videoWidth)return;const c=document.createElement("canvas");c.width=v.videoWidth;c.height=v.videoHeight;c.getContext("2d").drawImage(v,0,0);c.toBlob(b=>{add(b,"i");toast("✓ "+T(2))},"image/png")}
+function snap(v){if(!v.videoWidth)return;const c=document.createElement("canvas");c.width=v.videoWidth;c.height=v.videoHeight;c.getContext("2d").drawImage(v,0,0);c.toBlob(b=>{add(b,"i");toast("✓ "+T(2))},"image/jpeg",.92)}
 
 // camera
 async function camOn(){
@@ -273,7 +273,7 @@ ta.oninput=()=>{if(+tz.value<+ta.value)tz.value=ta.value;ev.currentTime=+ta.valu
 tz.oninput=()=>{if(+tz.value<+ta.value)ta.value=tz.value};
 sb.onclick=()=>{
  if(!cur)return;
- if(cur.type=="i"){M="txt";cr=null;render();cn.toBlob(b=>{add(b,"i");toast("✓ "+T(2));go("gal")},"image/png");return}
+ if(cur.type=="i"){M="txt";cr=null;render();cn.toBlob(b=>{add(b,"i");toast("✓ "+T(2));go("gal")},"image/jpeg",.92);return}
  ex()}
 async function ex(){
  if(busy)return;busy=1;sb.classList.add("on");
@@ -287,6 +287,20 @@ async function ex(){
  (function f(){x.filter=F(c.width);x.drawImage(v,0,0,c.width,c.height);
   if(v.currentTime>=z||v.ended){v.pause();r.stop();return}requestAnimationFrame(f)})();
 }
-draw();
+// storage: localStorage first; IndexedDB when an item is too big for localStorage (videos)
+const DB=new Promise((ok,no)=>{try{const r=indexedDB.open("screencam",1);r.onupgradeneeded=()=>r.result.createObjectStore("b");r.onsuccess=()=>ok(r.result);r.onerror=no}catch(e){no()}});
+const idb=(m,f)=>DB.then(d=>new Promise((ok,no)=>{const q=f(d.transaction("b",m).objectStore("b"));q.onsuccess=()=>ok(q.result);q.onerror=no}));
+const b2d=b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)});
+const d2b=u=>{const[h,s]=u.split(","),m=h.match(/:(.*?);/)[1],t=atob(s),a=new Uint8Array(t.length);for(let i=0;i<t.length;i++)a[i]=t.charCodeAt(i);return new Blob([a],{type:m})};
+function saveIdx(){try{localStorage.setItem("sc-idx",JSON.stringify(G.map(i=>({id:i.id,type:i.type,dur:i.dur,st:i.st}))))}catch(e){toast("⚠ 💾")}}
+async function persist(it){
+ try{if(it.b.size<1.2e6){localStorage.setItem("sc-d-"+it.id,await b2d(it.b));it.st="l";saveIdx();return}}catch(e){}
+ try{await idb("readwrite",s=>s.put(it.b,it.id));it.st="d";saveIdx()}catch(e){toast("⚠ 💾")}}
+function forget(it){try{localStorage.removeItem("sc-d-"+it.id)}catch(e){}idb("readwrite",s=>s.delete(it.id)).catch(()=>{});saveIdx()}
+async function init(){
+ let ix=[];try{ix=JSON.parse(localStorage.getItem("sc-idx")||"[]")}catch(e){}
+ for(const e of ix){try{const b=e.st=="l"?d2b(localStorage.getItem("sc-d-"+e.id)):await idb("readonly",s=>s.get(e.id));if(b)G.push({...e,b,url:URL.createObjectURL(b)})}catch(x){}}
+ draw()}
+draw();init();
 </script>
 </body></html>
