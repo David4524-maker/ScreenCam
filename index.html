@@ -31,6 +31,8 @@ main{flex:1;min-height:0;padding:12px}
 .it .ac{position:absolute;right:4px;bottom:4px;display:flex;gap:4px}
 .ac button,.ac a{background:#000a;color:#fff;border:0;border-radius:6px;padding:3px 7px;text-decoration:none;cursor:pointer;font-size:14px}
 .em{color:var(--mt);text-align:center;margin:auto}
+input[type=color]{width:44px;height:40px;padding:2px;border:1px solid var(--ln);border-radius:8px;background:var(--bg);cursor:pointer}
+#cn{cursor:crosshair}
 #ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;max-height:40%;overflow:auto}
 #ctl label{display:flex;flex-direction:column;font-size:12px;color:var(--mt)}
 #ctl .w{grid-column:1/-1}
@@ -105,8 +107,8 @@ html.mob #wm{font-size:30px}
   <label><span data-t="12"></span><input type="range" id="kb" min="0" max="200" value="100"></label>
   <label><span data-t="13"></span><input type="range" id="kc" min="0" max="200" value="100"></label>
   <label><span data-t="14"></span><input type="range" id="ks" min="0" max="300" value="100"></label>
-  <label><span data-t="15"></span><select id="kf"><option value="none" data-t="19"></option><option value="bw" data-t="20"></option><option value="sp" data-t="21"></option></select></label>
-  <div class="bar w" id="ib"><button class="b" id="ro" data-t="16"></button><button class="b" id="fp" data-t="17"></button><input type="text" id="tx" data-p="28" size="14"><button class="b" id="ct">↶</button></div>
+  <label><span data-t="15"></span><select id="kf"><option value="none" data-t="19"></option><option value="bw" data-t="20"></option><option value="sp" data-t="21"></option><option value="iv" data-t="30"></option><option value="wm" data-t="31"></option><option value="cl" data-t="32"></option><option value="vt" data-t="33"></option><option value="fd" data-t="34"></option><option value="bl" data-t="35"></option></select></label>
+  <div class="bar w" id="ib"><button class="b" id="ro" data-t="16"></button><button class="b" id="fp" data-t="17"></button><input type="text" id="tx" data-p="28" size="14"><button class="b" id="ct">↶</button><button class="b" id="bd" data-t="37"></button><input type="color" id="pc" value="#ff3b30" aria-label="Color"><input type="range" id="pw" min="1" max="30" value="6" style="width:90px" aria-label="Size"><button class="b" id="bc" data-t="36"></button></div>
   <div class="w" id="vb"><label><span data-t="22"></span><input type="range" id="ta" min="0" max="0" step="0.1" value="0"></label><label><span data-t="23"></span><input type="range" id="tz" min="0" max="0" step="0.1" value="0"></label></div>
   <button class="b w" id="sb" data-t="10"></button>
  </div>
@@ -123,16 +125,16 @@ html.mob #wm{font-size:30px}
 <script>
 // cam|scr|gal|edi|photo|rec|stop|shot|recscr|empty|save|del|bright|contr|sat|filter|rotate|flip|text|none|bw|sepia|start|end|export|err|switch|edit|texthint|apply
 const D={
-es:"Cámara|Pantalla|Galería|Editor|Foto|Grabar|Detener|Captura|Grabar pantalla|Aún no hay nada|Guardar|Eliminar|Brillo|Contraste|Saturación|Filtro|Girar|Voltear|Texto|Ninguno|B/N|Sepia|Inicio|Fin|Exportar|No se pudo acceder|Cambiar|Editar|Escribe y toca la imagen|Aplicar",
-en:"Camera|Screen|Gallery|Editor|Photo|Record|Stop|Screenshot|Record screen|Nothing here yet|Save|Delete|Brightness|Contrast|Saturation|Filter|Rotate|Flip|Text|None|B/W|Sepia|Start|End|Export|Access denied|Switch|Edit|Type, then tap image|Apply",
-pt:"Câmera|Tela|Galeria|Editor|Foto|Gravar|Parar|Captura|Gravar tela|Nada por aqui|Salvar|Excluir|Brilho|Contraste|Saturação|Filtro|Girar|Espelhar|Texto|Nenhum|P&B|Sépia|Início|Fim|Exportar|Acesso negado|Trocar|Editar|Digite e toque na imagem|Aplicar",
-fr:"Caméra|Écran|Galerie|Éditeur|Photo|Enregistrer|Arrêter|Capture|Enregistrer l’écran|Rien ici|Sauver|Supprimer|Luminosité|Contraste|Saturation|Filtre|Pivoter|Retourner|Texte|Aucun|N&B|Sépia|Début|Fin|Exporter|Accès refusé|Changer|Modifier|Saisir puis toucher l’image|Appliquer",
-de:"Kamera|Bildschirm|Galerie|Editor|Foto|Aufnehmen|Stopp|Screenshot|Bildschirm aufnehmen|Noch nichts da|Speichern|Löschen|Helligkeit|Kontrast|Sättigung|Filter|Drehen|Spiegeln|Text|Kein|S/W|Sepia|Start|Ende|Exportieren|Zugriff verweigert|Wechseln|Bearbeiten|Tippen, dann Bild antippen|Anwenden",
-it:"Fotocamera|Schermo|Galleria|Editor|Foto|Registra|Stop|Screenshot|Registra schermo|Ancora niente|Salva|Elimina|Luminosità|Contrasto|Saturazione|Filtro|Ruota|Specchia|Testo|Nessuno|B/N|Seppia|Inizio|Fine|Esporta|Accesso negato|Cambia|Modifica|Scrivi, poi tocca l’immagine|Applica",
-ja:"カメラ|画面|ギャラリー|エディター|写真|録画|停止|スクショ|画面を録画|まだ何もありません|保存|削除|明るさ|コントラスト|彩度|フィルター|回転|反転|テキスト|なし|白黒|セピア|開始|終了|書き出し|アクセス拒否|切替|編集|入力して画像をタップ|適用",
-zh:"相机|屏幕|相册|编辑器|拍照|录制|停止|截图|录屏|暂无内容|保存|删除|亮度|对比度|饱和度|滤镜|旋转|翻转|文字|无|黑白|复古|开始|结束|导出|访问被拒绝|切换|编辑|输入后点击图片|应用",
-ko:"카메라|화면|갤러리|편집기|사진|녹화|정지|캡처|화면 녹화|아직 없음|저장|삭제|밝기|대비|채도|필터|회전|반전|텍스트|없음|흑백|세피아|시작|종료|내보내기|접근 거부|전환|편집|입력 후 이미지 탭|적용",
-ru:"Камера|Экран|Галерея|Редактор|Фото|Запись|Стоп|Скриншот|Запись экрана|Пока пусто|Сохранить|Удалить|Яркость|Контраст|Насыщенность|Фильтр|Повернуть|Отразить|Текст|Нет|Ч/Б|Сепия|Начало|Конец|Экспорт|Доступ запрещён|Сменить|Изменить|Введите и нажмите на фото|Применить"};
+es:"Cámara|Pantalla|Galería|Editor|Foto|Grabar|Detener|Captura|Grabar pantalla|Aún no hay nada|Guardar|Eliminar|Brillo|Contraste|Saturación|Filtro|Girar|Voltear|Texto|Ninguno|B/N|Sepia|Inicio|Fin|Exportar|No se pudo acceder|Cambiar|Editar|Escribe y toca la imagen|Aplicar|Invertir|Cálido|Frío|Vintage|Desvanecido|Desenfoque|Recortar|Dibujar",
+en:"Camera|Screen|Gallery|Editor|Photo|Record|Stop|Screenshot|Record screen|Nothing here yet|Save|Delete|Brightness|Contrast|Saturation|Filter|Rotate|Flip|Text|None|B/W|Sepia|Start|End|Export|Access denied|Switch|Edit|Type, then tap image|Apply|Invert|Warm|Cool|Vintage|Fade|Blur|Crop|Draw",
+pt:"Câmera|Tela|Galeria|Editor|Foto|Gravar|Parar|Captura|Gravar tela|Nada por aqui|Salvar|Excluir|Brilho|Contraste|Saturação|Filtro|Girar|Espelhar|Texto|Nenhum|P&B|Sépia|Início|Fim|Exportar|Acesso negado|Trocar|Editar|Digite e toque na imagem|Aplicar|Inverter|Quente|Frio|Vintage|Desbotado|Desfoque|Cortar|Desenhar",
+fr:"Caméra|Écran|Galerie|Éditeur|Photo|Enregistrer|Arrêter|Capture|Enregistrer l’écran|Rien ici|Sauver|Supprimer|Luminosité|Contraste|Saturation|Filtre|Pivoter|Retourner|Texte|Aucun|N&B|Sépia|Début|Fin|Exporter|Accès refusé|Changer|Modifier|Saisir puis toucher l’image|Appliquer|Inverser|Chaud|Froid|Vintage|Délavé|Flou|Rogner|Dessiner",
+de:"Kamera|Bildschirm|Galerie|Editor|Foto|Aufnehmen|Stopp|Screenshot|Bildschirm aufnehmen|Noch nichts da|Speichern|Löschen|Helligkeit|Kontrast|Sättigung|Filter|Drehen|Spiegeln|Text|Kein|S/W|Sepia|Start|Ende|Exportieren|Zugriff verweigert|Wechseln|Bearbeiten|Tippen, dann Bild antippen|Anwenden|Invertieren|Warm|Kühl|Vintage|Verblasst|Weichzeichner|Zuschneiden|Zeichnen",
+it:"Fotocamera|Schermo|Galleria|Editor|Foto|Registra|Stop|Screenshot|Registra schermo|Ancora niente|Salva|Elimina|Luminosità|Contrasto|Saturazione|Filtro|Ruota|Specchia|Testo|Nessuno|B/N|Seppia|Inizio|Fine|Esporta|Accesso negato|Cambia|Modifica|Scrivi, poi tocca l’immagine|Applica|Inverti|Caldo|Freddo|Vintage|Sbiadito|Sfocatura|Ritaglia|Disegna",
+ja:"カメラ|画面|ギャラリー|エディター|写真|録画|停止|スクショ|画面を録画|まだ何もありません|保存|削除|明るさ|コントラスト|彩度|フィルター|回転|反転|テキスト|なし|白黒|セピア|開始|終了|書き出し|アクセス拒否|切替|編集|入力して画像をタップ|適用|ネガ|暖色|寒色|ヴィンテージ|フェード|ぼかし|切り抜き|描画",
+zh:"相机|屏幕|相册|编辑器|拍照|录制|停止|截图|录屏|暂无内容|保存|删除|亮度|对比度|饱和度|滤镜|旋转|翻转|文字|无|黑白|复古|开始|结束|导出|访问被拒绝|切换|编辑|输入后点击图片|应用|反色|暖色|冷色|怀旧|褪色|模糊|裁剪|画笔",
+ko:"카메라|화면|갤러리|편집기|사진|녹화|정지|캡처|화면 녹화|아직 없음|저장|삭제|밝기|대비|채도|필터|회전|반전|텍스트|없음|흑백|세피아|시작|종료|내보내기|접근 거부|전환|편집|입력 후 이미지 탭|적용|색상 반전|따뜻한|차가운|빈티지|페이드|흐림|자르기|그리기",
+ru:"Камера|Экран|Галерея|Редактор|Фото|Запись|Стоп|Скриншот|Запись экрана|Пока пусто|Сохранить|Удалить|Яркость|Контраст|Насыщенность|Фильтр|Повернуть|Отразить|Текст|Нет|Ч/Б|Сепия|Начало|Конец|Экспорт|Доступ запрещён|Сменить|Изменить|Введите и нажмите на фото|Применить|Инверсия|Тёплый|Холодный|Винтаж|Выцветший|Размытие|Обрезать|Рисовать"};
 const NM={es:"Español",en:"English",pt:"Português",fr:"Français",de:"Deutsch",it:"Italiano",ja:"日本語",zh:"中文",ko:"한국어",ru:"Русский"};
 let lang="";try{lang=localStorage.getItem("sc-lang")||""}catch(e){}
 if(!D[lang]){lang=(navigator.language||"en").slice(0,2);if(!D[lang])lang="en"}
@@ -219,11 +221,12 @@ function go(v){
 $$("nav button").forEach(b=>b.onclick=()=>{go(b.dataset.v);if(b.dataset.v=="ed"&&!cur&&G.length)edit(G[0])});
 
 // editor
-const F=()=>`brightness(${S.b}%) contrast(${S.c}%) saturate(${S.s}%)`+(S.f=="bw"?" grayscale(1)":S.f=="sp"?" sepia(1)":"");
+const FX={bw:" grayscale(1)",sp:" sepia(1)",iv:" invert(1)",wm:" sepia(.3) saturate(1.5) hue-rotate(-12deg)",cl:" hue-rotate(18deg) saturate(1.2) brightness(1.05)",vt:" sepia(.5) contrast(1.15) brightness(.9) saturate(.8)",fd:" contrast(.85) brightness(1.12) saturate(.8)"};
+const F=w=>`brightness(${S.b}%) contrast(${S.c}%) saturate(${S.s}%)`+(S.f=="bl"?` blur(${(w||360)/120}px)`:FX[S.f]||"");
 function edit(it){
  cur=it;go("ed");const v=$("#v-ed");
  v.classList.remove("no");v.classList.toggle("img",it.type=="i");v.classList.toggle("vid",it.type=="v");
- S={b:100,c:100,s:100,f:"none",r:0,fl:0,tx:[]};
+ S={b:100,c:100,s:100,f:"none",r:0,fl:0,tx:[],st:[],h:[]};M="txt";cr=null;bd.classList.remove("on");bc.classList.remove("on");
  kb.value=kc.value=ks.value=100;kf.value="none";tx.value="";
  sb.dataset.t=it.type=="i"?10:24;tr();
  if(it.type=="i"){const im=new Image();im.onload=()=>{img=im;render()};im.src=it.url}
@@ -231,21 +234,46 @@ function edit(it){
 function render(){
  if(!img)return;
  const q=S.r%2,w=q?img.height:img.width,h=q?img.width:img.height,x=cn.getContext("2d");
- cn.width=w;cn.height=h;x.filter=F();x.save();x.translate(w/2,h/2);x.rotate(S.r*Math.PI/2);if(S.fl)x.scale(-1,1);
+ cn.width=w;cn.height=h;x.filter=F(w);x.save();x.translate(w/2,h/2);x.rotate(S.r*Math.PI/2);if(S.fl)x.scale(-1,1);
  x.drawImage(img,-img.width/2,-img.height/2);x.restore();x.filter="none";
  const fs=Math.round(w/12);x.font="bold "+fs+"px system-ui,sans-serif";x.textAlign="center";x.lineWidth=fs/8;x.strokeStyle="#000";x.fillStyle="#fff";
- S.tx.forEach(t=>{x.strokeText(t.t,t.x*w,t.y*h);x.fillText(t.t,t.x*w,t.y*h)})}
+ S.tx.forEach(t=>{x.strokeText(t.t,t.x*w,t.y*h);x.fillText(t.t,t.x*w,t.y*h)});drawSt(x,w,h)}
 function upd(){S.b=+kb.value;S.c=+kc.value;S.s=+ks.value;S.f=kf.value;cur.type=="i"?render():ev.style.filter=F()}
 [kb,kc,ks,kf].forEach(e=>e.oninput=upd);
 ro.onclick=()=>{S.r=(S.r+1)%4;render()};
 fp.onclick=()=>{S.fl^=1;render()};
-ct.onclick=()=>{S.tx.pop();render()};
-cn.onclick=e=>{const t=tx.value.trim();if(!t)return;const r=cn.getBoundingClientRect();S.tx.push({t,x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height});render()};
+ct.onclick=()=>{const k=S.h.pop();k=="s"?S.st.pop():k=="t"&&S.tx.pop();render()};
+let M="txt",cr=null,dr=null;
+const pt=e=>{const r=cn.getBoundingClientRect();return[Math.min(1,Math.max(0,(e.clientX-r.left)/r.width)),Math.min(1,Math.max(0,(e.clientY-r.top)/r.height))]};
+function mode(m){M=M==m?"txt":m;cr=null;bd.classList.toggle("on",M=="draw");bc.classList.toggle("on",M=="crop");render()}
+function drawSt(x,w,h){
+ x.lineCap=x.lineJoin="round";
+ S.st.forEach(s=>{x.strokeStyle=s.c;x.lineWidth=Math.max(1,s.w*w);x.beginPath();s.p.forEach((p,i)=>i?x.lineTo(p[0]*w,p[1]*h):x.moveTo(p[0]*w,p[1]*h));if(s.p.length==1)x.lineTo(s.p[0][0]*w+.1,s.p[0][1]*h);x.stroke()});
+ if(M=="crop"&&cr){const a=Math.min(cr[0],cr[2])*w,b=Math.min(cr[1],cr[3])*h,c=Math.abs(cr[2]-cr[0])*w,d=Math.abs(cr[3]-cr[1])*h;x.fillStyle="#0009";x.beginPath();x.rect(0,0,w,h);x.rect(a,b,c,d);x.fill("evenodd");x.strokeStyle="#fff";x.lineWidth=Math.max(2,w/300);x.strokeRect(a,b,c,d)}}
+function crop(){
+ const q=S.r%2,w=q?img.height:img.width,h=q?img.width:img.height;
+ const x0=Math.min(cr[0],cr[2]),y0=Math.min(cr[1],cr[3]),rw=Math.abs(cr[2]-cr[0]),rh=Math.abs(cr[3]-cr[1]);
+ const t=document.createElement("canvas");t.width=w;t.height=h;const a=t.getContext("2d");
+ a.translate(w/2,h/2);a.rotate(S.r*Math.PI/2);if(S.fl)a.scale(-1,1);a.drawImage(img,-img.width/2,-img.height/2);
+ const o=document.createElement("canvas");o.width=Math.max(1,Math.round(rw*w));o.height=Math.max(1,Math.round(rh*h));
+ o.getContext("2d").drawImage(t,x0*w,y0*h,rw*w,rh*h,0,0,o.width,o.height);
+ S.st.forEach(s=>{s.p=s.p.map(p=>[(p[0]-x0)/rw,(p[1]-y0)/rh]);s.w/=rw});
+ S.tx.forEach(k=>{k.x=(k.x-x0)/rw;k.y=(k.y-y0)/rh});
+ img=o;S.r=0;S.fl=0;mode("crop")}
+bd.onclick=()=>mode("draw");
+bc.onclick=()=>{if(M=="crop"&&cr&&Math.abs(cr[2]-cr[0])>.02&&Math.abs(cr[3]-cr[1])>.02){crop();return}mode("crop")};
+cn.style.touchAction="none";
+cn.onpointerdown=e=>{const p=pt(e);
+ if(M=="draw"){cn.setPointerCapture(e.pointerId);dr={c:pc.value,w:pw.value/1000,p:[p]};S.st.push(dr);S.h.push("s");render()}
+ else if(M=="crop"){cn.setPointerCapture(e.pointerId);cr=[p[0],p[1],p[0],p[1]];dr="c"}
+ else{const t=tx.value.trim();if(t){S.tx.push({t,x:p[0],y:p[1]});S.h.push("t");render()}}};
+cn.onpointermove=e=>{if(!dr)return;const p=pt(e);if(dr=="c"){cr[2]=p[0];cr[3]=p[1]}else dr.p.push(p);render()};
+cn.onpointerup=()=>{dr=null};
 ta.oninput=()=>{if(+tz.value<+ta.value)tz.value=ta.value;ev.currentTime=+ta.value};
 tz.oninput=()=>{if(+tz.value<+ta.value)ta.value=tz.value};
 sb.onclick=()=>{
  if(!cur)return;
- if(cur.type=="i"){cn.toBlob(b=>{add(b,"i");toast("✓ "+T(2));go("gal")},"image/png");return}
+ if(cur.type=="i"){M="txt";cr=null;render();cn.toBlob(b=>{add(b,"i");toast("✓ "+T(2));go("gal")},"image/png");return}
  ex()}
 async function ex(){
  if(busy)return;busy=1;sb.classList.add("on");
@@ -256,7 +284,7 @@ async function ex(){
  try{(v.captureStream?v.captureStream():v.mozCaptureStream()).getAudioTracks().forEach(t=>o.addTrack(t))}catch(e){}
  const r=mk(o,(b,d)=>{busy=0;sb.classList.remove("on");add(b,"v",d);toast("✓ "+T(2));go("gal")});
  v.play();
- (function f(){x.filter=F();x.drawImage(v,0,0,c.width,c.height);
+ (function f(){x.filter=F(c.width);x.drawImage(v,0,0,c.width,c.height);
   if(v.currentTime>=z||v.ended){v.pause();r.stop();return}requestAnimationFrame(f)})();
 }
 draw();
